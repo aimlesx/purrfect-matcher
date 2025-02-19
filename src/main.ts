@@ -32,6 +32,8 @@ const CHUNK_SIZE = 1024 ** 2; // 1 MB
 
 const TIMER_LABEL = 'Execution time';
 
+const WORKER_FILE = __dirname + '/worker.js';
+
 type PositionOutputType = {
   lineOffset: number;
   charOffset: number;
@@ -62,7 +64,7 @@ const main = async (args: ProgramArgs) => {
   const pool = new StaticPool({
     size: threads,
     workerData: workerData,
-    task: __dirname + '/worker.js',
+    task: WORKER_FILE,
   });
 
   const aggregator = new Aggregator();
