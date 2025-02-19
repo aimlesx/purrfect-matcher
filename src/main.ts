@@ -47,12 +47,10 @@ interface ProgramArgs {
 }
 
 const main = async (args: ProgramArgs) => {
-  console.log(args);
-
   if (args.executionTime) console.time(TIMER_LABEL);
 
   const matcherConfig: MatcherConfigType = {
-    caseSensitive: args.caseInsensitive ? false : true,
+    caseSensitive: !args.caseInsensitive,
   };
 
   const workerData: WorkerDataType = {
@@ -94,24 +92,25 @@ const main = async (args: ProgramArgs) => {
   }
 
   const results = aggregator.getResults();
-
-  const m: { [name: string]: PositionOutputType[] } = {};
+  const printableResult: { [name: string]: PositionOutputType[] } = {};
 
   for (const [name, charOffset, lineOffset] of results) {
-    if (!m[name]) {
-      m[name] = [];
+    if (!printableResult[name]) {
+      printableResult[name] = [];
     }
 
-    m[name].push({ lineOffset, charOffset });
+    printableResult[name].push({ lineOffset, charOffset });
   }
 
   let output: string;
   if (args.json) {
-    output = JSON.stringify(m, null, 2);
+    output = JSON.stringify(printableResult, null, 2);
   } else {
-    output = Object.entries(m)
-      .map(([name, positions]) => 
-        `${name} --> [${positions.map(p => `{lineOffset:${p.lineOffset}, charOffset:${p.charOffset}}`).join(', ')}]`)
+    output = Object.entries(printableResult)
+      .map(
+        ([name, positions]) =>
+          `${name} --> [${positions.map((p) => `{lineOffset:${p.lineOffset}, charOffset:${p.charOffset}}`).join(', ')}]`,
+      )
       .join('\n');
   }
 

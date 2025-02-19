@@ -34,10 +34,12 @@ export class Matcher {
 
     text = caseSensitive ? text : text.toLowerCase();
 
+    // New line character offsets
     const nlOffsets = Array.from(text.matchAll(/\n/g), (m) => m.index) ?? [];
     let currentLine = 0;
 
     return this.trie.search(text).map((match) => {
+      // This part calculates the line number of the match
       for (
         let nextOffset = nlOffsets[currentLine];
         nextOffset !== undefined && match[0] > nextOffset;
