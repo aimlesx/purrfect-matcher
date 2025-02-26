@@ -39,14 +39,17 @@ export class Matcher {
     let currentLine = 0;
 
     return this.trie.search(text).map((match) => {
+      const matchOffset = match[0];
+      const matchKeyword = match[1][0] ?? '';
+
       // This part calculates the line number of the match
       for (
         let nextOffset = nlOffsets[currentLine];
-        nextOffset !== undefined && match[0] > nextOffset;
+        nextOffset !== undefined && matchOffset > nextOffset;
         nextOffset = nlOffsets[++currentLine]
       );
 
-      return [match[1][0] ?? '', offset + match[0], lineOffset + currentLine];
+      return [matchKeyword, offset + matchOffset, lineOffset + currentLine];
     });
   }
 }

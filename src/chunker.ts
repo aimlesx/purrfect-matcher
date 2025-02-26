@@ -36,7 +36,7 @@ export async function* chunker(
 
       offset += chunkSize - overlap;
       lineOffset += Array.from(
-        buffer.slice(0, chunkSize - overlap).matchAll(/\n/g),
+        buffer.slice(0, chunkSize).matchAll(/\n/g),
       ).length;
 
       buffer = buffer.slice(chunkSize);
